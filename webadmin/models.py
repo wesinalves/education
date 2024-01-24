@@ -9,6 +9,7 @@ class Course(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     banner = models.ImageField(upload_to='course')
+    price = models.FloatField()
 
     def __str__(self):
         return self.title   
@@ -33,20 +34,45 @@ class Student(models.Model):
 class Test(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)    
     description = models.TextField()
-    grade = models.FloatField()
     completed = models.BooleanField()
 
     def __str__(self):
         return self.description[:50]
 
+
+class Promotion(models.Model):
+    description = models.CharField(max_length=255)
+    percent = models.FloatField()
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+    active = models.BooleanField()
+
+    def __str__(self):
+        return self.description
+class Payment(models.Model):
+    value = models.FloatField()
+    paid = models.BooleanField(default=False)
+    payment_date = models.DateField(null=True)
+    promotion = models.ForeignKey(Promotion, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
+    recurrent = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.student.name + '-' + str(self.value)
+
 class CourseStudent(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.DO_NOTHING)
+    payment = models.ForeignKey('Payment', on_delete=models.DO_NOTHING, null=True)
     rate = models.IntegerField(null=True)
     comments = models.TextField(null=True)
-    completed = models.BooleanField()
-    grade = models.IntegerField()
+    completed = models.BooleanField(default=False)
+    grade = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.student.name + '-' + self.course.title
 
 class Module(models.Model):
     name = models.CharField(max_length=255)    
@@ -91,19 +117,5 @@ class Resource(models.Model):
     def __str__(self):
         return self.title
 
-class Promotion(models.Model):
-    description = models.CharField(max_length=255)
-    percent = models.FloatField()
 
-    def __str__(self):
-        return self.description
-
-class Payment(models.Model):
-    value = models.FloatField()
-    paid = models.BooleanField(null=True)
-    payment_date = models.DateField()
-    promotion = models.ForeignKey(Promotion, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.value
 

@@ -25,17 +25,29 @@ class QuestionAdmin(admin.ModelAdmin):
     ]
 
 class ModuleAdmin(admin.ModelAdmin):
+    search_fields = ('name', 'course__name')
+    list_filter = ('course',)
+    list_display = ('name', 'course')
     inlines = [
         TopicAdmin,
         ResourceAdmin,        
     ]
 
+class PaymentAdmin(admin.ModelAdmin):
+    search_fields = ('student__name', 'course__name')
+    list_filter = ('course',)
+    list_display = ('student', 'course', 'value', 'paid',)
+
+class CourseStudentAdmin(admin.ModelAdmin):
+    search_fields = ('student__name', 'course__name')
+    list_filter = ('course',)
+    list_display = ('student', 'course', 'completed',)
 
 admin.site.register(Course)
-admin.site.register(CourseStudent)
+admin.site.register(CourseStudent, CourseStudentAdmin)
 admin.site.register(Student)
 admin.site.register(Test)
 admin.site.register(Module, ModuleAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Promotion)
-admin.site.register(Payment)
+admin.site.register(Payment, PaymentAdmin)
