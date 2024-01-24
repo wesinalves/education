@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+  
+  <main>
+  
+    <section class="py-5 text-center container">
+      <div class="row py-lg-5">
+        <div class="col-lg-8 col-md-8 mx-auto">
+          <h1 class="fw-light">{{ course.title }}</h1>
+          <h3>R$ {{ course.price}}</h3>
+          <form method="post">
+            {% csrf_token %}
+            <p>
+              <button type="submit" class="btn btn-primary my-2">Comprar este curso</button>
+              <a href="#" class="btn btn-secondary my-2">Aplicar cupom</a>
+            </p>
+          </form>
+          
+        </div>
+      </div>
+    </section>
+  
+    <div class="album py-5 bg-light">
+      <div class="container">
+        
+        <div class="row">
+          <div class="col">
+            <div class="p-3 mb-3 bg-body border rounded">
+              {{ course.description | safe }}
+            </div>
+          </div>
+          <div class="col">
+            <div class="accordion" id="accordionExample">
+              {% for module in modules %}
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{module.id}}" aria-expanded="true" aria-controls="collapse{{module.id}}">
+                    {{ module.name }}
+                  </button>
+                </h2>
+                <div id="collapse{{module.id}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    {% for topic in module.topic_set.all %}
+                    <p>{{ topic.title }} - {{ topic.duration }}min</p>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+
+        
+        
+  
+       
+
+      </div>
+    </div>
+  
+  </main>
+  
+  <footer class="text-muted py-5">
+    <div class="container">
+      <p class="float-end mb-1">
+        <a href="#">Back to top</a>
+      </p>
+      <p class="mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
+      <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="/docs/5.0/getting-started/introduction/">getting started guide</a>.</p>
+    </div>
+  </footer>
+
+{% endblock %}
