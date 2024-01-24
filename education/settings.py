@@ -20,7 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+#SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = 'my-secret-key-in-development'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -118,10 +119,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 MEDIA_ROOT = BASE_DIR / 'media'
-
 MEDIA_URL = '/media/'
 
 STATIC_URL = 'static/'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 BOOTSTRAP5 = {
     "css_url": {
